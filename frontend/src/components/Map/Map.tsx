@@ -12,16 +12,21 @@ import usePlacesAutocomplete, {
     ComboboxOption,
   } from "@reach/combobox";
   import "@reach/combobox/styles.css";
-import { ResultStorage } from 'firebase-functions/v1/testLab';
 
+
+type Libraries = ("drawing" | "geometry" | "localContext" | "places" | "visualization")[];
+type Selected = google.maps.LatLng | google.maps.LatLngLiteral;
+
+const libraries: Libraries = ['places'];
 
 const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
 
-    const [selected,setSelected] = useState<google.maps.LatLng | google.maps.LatLngLiteral>();   
-
+    const [selected,setSelected] = useState<Selected>();  
+    const [mapCenter,setMapCenter] = useState<google.maps.LatLng | google.maps.LatLngLiteral | undefined>({lat:47.3769,lng:8.5417});
+    
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: apiKey,
-        libraries: ["places"],
+        libraries,
     })
 
     if (!isLoaded) return <div>Loading...</div>
@@ -29,9 +34,14 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
     return(
         <>
             <div className='absolute top-8 left-1/2 translate-x-[-50%] z-10 w-[400px]'>
-                <PlacesAutocomplete setSelected={setSelected} />
-            </div>            
-                <Map selected={selected}/>             
+                <PlacesAutocomplete setSelected={setSelected} setMapCenter={setMapCenter}/>
+            </div>     
+
+            {selected!==undefined? 
+                <Map selected={selected} mapCenter={mapCenter} />  
+                :
+                <Map mapCenter={mapCenter}/>  
+            }
             
         </>
     )
@@ -39,13 +49,15 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
 
 export default MapWrapper;
 
-const Map:FC<{selected:google.maps.LatLng | google.maps.LatLngLiteral}> = ({selected}) => {     
+const Map:FC<{selected?:Selected, mapCenter:google.maps.LatLng | google.maps.LatLngLiteral | undefined}> = ({selected,mapCenter}) => {     
+
+    
 
     return (            
 
         <GoogleMap 
             zoom={13}
-            center={{lat:47.3769,lng:8.5417}} 
+            center={mapCenter} 
             mapContainerClassName="h-full w-full"
         >               
             {/*selected && <Marker position={selected}/>*/}           
@@ -55,7 +67,8 @@ const Map:FC<{selected:google.maps.LatLng | google.maps.LatLngLiteral}> = ({sele
     )
 }
 
-const PlacesAutocomplete: FC<{setSelected:any}> = ({setSelected}) => {
+const PlacesAutocomplete: FC<{setSelected:React.Dispatch<React.SetStateAction<Selected | undefined>>,
+                            setMapCenter:React.Dispatch<React.SetStateAction<google.maps.LatLng | google.maps.LatLngLiteral | undefined>>}> = ({setSelected,setMapCenter}) => {
     const {
         ready,
         value,
@@ -69,9 +82,8 @@ const PlacesAutocomplete: FC<{setSelected:any}> = ({setSelected}) => {
         clearSuggestions();
 
         const results = await getGeocode({address});
-        console.log(results);
-        //const {lat,lng} = await getLatLng(results[0]);
-        //setSelected({lat,lng});
+        const {lat,lng} = getLatLng(results[0]);
+        setMapCenter({lat,lng});
     }
 
     
