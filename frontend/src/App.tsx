@@ -1,24 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {FC} from 'react'
+import MapWrapper from "./components/Map/Map";
 
-function App() {
+const google_api_key:string = "AIzaSyBLp6mRlnhc2VSe4PtSNApwU3Sdh94PUdo"//process.env.REACT_APP_GOOGLE_API_KEY ?? '';
+
+const App: FC<{}> = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="h-full w-full flex flex-col ">
+      <h1>Header</h1>
+      <MapWrapper apiKey={google_api_key}/>
+      <h1>Footer</h1>
     </div>
   );
 }
