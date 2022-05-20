@@ -11,11 +11,11 @@ import usePlacesAutocomplete, {
     ComboboxOption,
   } from "@reach/combobox";
   import "@reach/combobox/styles.css";
-  import { Selected,PlacesAutoCompleteProps } from './interfaces';
+  import {PlacesAutoCompleteProps } from './interfaces';
 
 
 
-const PlacesAutocomplete: FC<PlacesAutoCompleteProps> = ({setSelected,setMapCenter}) => {
+const PlacesAutocomplete: FC<PlacesAutoCompleteProps> = ({setSelected,map}) => {
     const {
         ready,
         value,
@@ -25,18 +25,24 @@ const PlacesAutocomplete: FC<PlacesAutoCompleteProps> = ({setSelected,setMapCent
     } = usePlacesAutocomplete();
 
     const handleSelect = async (address:string) => {
-        setValue(address,false);
-        clearSuggestions();
-
+        setValue(address,false);   
         const results = await getGeocode({address});
         const {lat,lng} = getLatLng(results[0]);
-        setMapCenter({lat,lng});
+        map.panTo({lat,lng});
+        if(results[0].address_components.length<=5){
+            map.setZoom(14);
+        }else{
+            map.setZoom(20);
+        }
+       
+        clearSuggestions();
     }
 
 
     return (
         <Combobox onSelect={handleSelect}>
         <ComboboxInput 
+        onClick={()=>setValue("",false)}
         value={value} 
         onChange={(e: { target: { value: string; }; })=>setValue(e.target.value)} 
         disabled={!ready}

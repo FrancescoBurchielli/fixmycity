@@ -8,8 +8,9 @@ const libraries: Libraries = ['places'];
 
 const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
 
-    const [selected,setSelected] = useState<Selected>();  
+    const [selected,setSelected] = useState<Selected>(null);  
     const [mapCenter,setMapCenter] = useState<google.maps.LatLng | google.maps.LatLngLiteral | undefined>({lat:47.3769,lng:8.5417});
+    const [map,setMap] = useState<google.maps.Map>();
     
 
     const {isLoaded} = useLoadScript({
@@ -21,15 +22,16 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
 
     return(
         <>
+            {map!==undefined?
             <div className='absolute top-8 left-1/2 translate-x-[-50%] z-10 w-[400px]'>
-                <PlacesAutocomplete setSelected={setSelected} setMapCenter={setMapCenter}/>
+                <PlacesAutocomplete setSelected={setSelected} map={map}/>
             </div>     
+            : null
+            }          
 
-            {selected!==undefined? 
-                <Map selected={selected} mapCenter={mapCenter} />  
-                :
-                <Map mapCenter={mapCenter}/>  
-            }
+            <Map selected={selected} setSelected={setSelected} mapCenter={mapCenter} setMap={setMap} />  
+                
+            
             
         </>
     )
@@ -38,13 +40,7 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
 export default MapWrapper;
 
 
-const Map:FC<MapProps> = ({selected,mapCenter}) => { 
-
-    const [map,setMap] = useState<google.maps.Map>();
-
-    if(map !== undefined){
-        //map.panTo({lat:42.4534,lng:11.4237});
-    }   
+const Map:FC<MapProps> = ({selected,setSelected,mapCenter,setMap}) => {       
 
     return (            
 
@@ -55,8 +51,13 @@ const Map:FC<MapProps> = ({selected,mapCenter}) => {
             onLoad={map => {
                 setMap(map);               
             }}
+            onClick={e=>{
+                    console.log(e);
+                    setSelected(e.latLng);              
+            }}
+            
         >               
-            {/*selected && <Marker position={selected}/>*/}           
+            {selected && <Marker position={selected} onClick={()=>{setSelected(null)}}/>}           
                  
         </GoogleMap>       
        
