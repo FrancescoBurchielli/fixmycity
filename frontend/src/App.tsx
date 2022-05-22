@@ -1,7 +1,7 @@
 import {FC} from 'react'
 import MapWrapper from "./components/Map/Map";
 
-const google_api_key:string = "AIzaSyBLp6mRlnhc2VSe4PtSNApwU3Sdh94PUdo"//process.env.REACT_APP_GOOGLE_API_KEY ?? '';
+const google_api_key:string = process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '';
 
 const App: FC<{}> = () => {
   return (
