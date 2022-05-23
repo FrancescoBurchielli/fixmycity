@@ -29,10 +29,10 @@ const PlacesAutocomplete: FC<PlacesAutoCompleteProps> = ({setSelected,map}) => {
         const results = await getGeocode({address});
         const {lat,lng} = getLatLng(results[0]);
         map.panTo({lat,lng});
-        if(results[0].address_components.length<=5){
-            map.setZoom(14);
+        if(results[0].address_components.length>=6){
+            map.setZoom(19);
         }else{
-            map.setZoom(20);
+            map.setZoom(14);
         }
        
         clearSuggestions();
