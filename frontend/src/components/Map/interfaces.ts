@@ -8,6 +8,10 @@ export type MarkerObject={
             lat:number,
             lng:number,
             address:string,
+            title:string,
+            created:string,
+            status: string,
+            upvotes: number,
 } 
 
 

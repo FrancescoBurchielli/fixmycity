@@ -1,0 +1,44 @@
+{ 
+    "issues":[
+        {
+            "id":1,
+            "lat":47.3769,
+            "lng":8.5417,
+            "address":"sample address",
+            "title":"Litter everywhere",
+            "created":"14/04/2022",
+            "status":"open",
+            "upvotes":20
+        },
+        {
+            "id":2,
+            "lat":47.3539,
+            "lng":8.5317,
+            "address":"sample address",
+            "title":"Graffiti",
+            "created":"10/05/2022",
+            "status":"open",
+            "upvotes":4},
+        {
+            "id":3,
+            "lat":47.39,
+            "lng":8.539,
+            "address":"sample address",
+            "title":"Broken traffic light",
+            "created":"8/05/2022",
+            "status":"in progress",
+            "upvotes":11},
+        {
+            "id":4,
+            "lat":47.38,
+            "lng":8.51,
+            "address":"sample address",
+            "title":"Damaged road sign",
+            "created":"12/05/2022",
+            "status":"open",
+            "upvotes":34
+        }
+    ]
+
+
+}

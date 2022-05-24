@@ -3,7 +3,8 @@ import { GoogleMap, useLoadScript, Marker, InfoWindow} from "@react-google-maps/
 import PlacesAutocomplete from '../PlacesAutocomplete/PlacesAutocomplete';
 import { MapProps, Libraries, Selected, MarkerObject } from "./interfaces";
 import { useEffect } from 'react';
-;
+import { getAllIssues } from '../../axios/fetches';
+import { getLatLng } from 'use-places-autocomplete';
 
 const libraries: Libraries = ['places'];
 
@@ -24,7 +25,7 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
     return(
         <>
             {map!==undefined?
-            <div className='absolute top-8 left-1/2 translate-x-[-50%] z-10 w-[400px]'>
+            <div className='absolute top-8 left-1/2 translate-x-[-50%] z-10 w-[90%] md:w-[50%] lg:w-[30%]'>
                 <PlacesAutocomplete setSelected={setSelected} map={map}/>
             </div>     
             : null
@@ -46,16 +47,15 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
     const [activeMarker,setActiveMarker] = useState<MarkerObject>();
 
     useEffect(()=>{
-        const sampleMarkers:Array<MarkerObject> = [
-            {id:1,lat:47.3769,lng:8.5417,address:'sample address'},
-            {id:2,lat:47.3539,lng:8.5417,address:'sample address'},
-            {id:3,lat:47.39,lng:8.539,address:'sample address'},
-            {id:4,lat:47.38,lng:8.51,address:'sample address'},
-        ];
-        setTimeout(()=>setMarkers([...sampleMarkers]),2000)
+        getAllIssues(setMarkers);
     },[])
 
-        
+    const options = {
+        disableDefaultUI:true,
+    }
+
+
+
     const getAddressFromLatLng = async (latLng:google.maps.LatLng) => {
         const latLngInput = {'location':latLng};
         const response = await geocoder.geocode(latLngInput);
@@ -65,17 +65,20 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
     const markerOnClick = (e:google.maps.MapMouseEvent,marker:MarkerObject) => {
         if(map!==undefined){
             setMapCenter({'lat':marker.lat,'lng':marker.lng});            
-            setActiveMarker(marker);
             map.setZoom(18);
+            setActiveMarker(marker);
         }
       
     }
+
+    console.log(selected);
 
     return (            
 
         <GoogleMap 
             zoom={13}
             center={mapCenter} 
+            options={options}
             mapContainerClassName="h-full w-full"
             onLoad={map => {
                 setMap(map);               
@@ -83,7 +86,7 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
             onClick={async e=>{    
                     if(e.latLng!==null){                        
                         const address = await getAddressFromLatLng(e.latLng);
-                        setSelected({latLng:e.latLng,address:address});
+                        setSelected({latLng:e.latLng,address:address});                      
                     }            
             }}
             
@@ -107,14 +110,19 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
             {activeMarker && (              
                 <InfoWindow
                     position={{
-                        lat: activeMarker.lat,
-                        lng: activeMarker.lng,
+                        lat: activeMarker.lat + 0.0001,
+                        lng: activeMarker.lng ,
                     }}
                     onCloseClick={()=>{
                         setActiveMarker(undefined);
                     }}
                 >
-                <div>Test</div>
+                <div className='w-24 md:w-36 lg:w-52'>
+                    <p className='text-base md:text-lg lg:text-xl font-bold '>{activeMarker.title}</p>
+                    <p>{activeMarker.created}</p>
+                    <p>{activeMarker.status}</p>
+                    <p>{activeMarker.upvotes}</p>
+                </div>
                 </InfoWindow>
             
                 )

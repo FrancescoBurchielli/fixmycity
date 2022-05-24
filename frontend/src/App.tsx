@@ -1,16 +1,19 @@
 import {FC} from 'react'
-import MapWrapper from "./components/Map/Map";
+import { useRoutes, BrowserRouter as Router } from 'react-router-dom' ;
+import routes from './routes/routes';
 
-const google_api_key:string = process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '';
-
-const App: FC<{}> = () => {
-  return (
-    <div className="h-full w-full flex flex-col ">
-      <h1>Header</h1>
-      <MapWrapper apiKey={google_api_key}/>
-      <h1>Footer</h1>
-    </div>
-  );
+const App: FC<{}> = () => { 
+    const routeResult = useRoutes(routes);
+    return routeResult    
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+};
+
+
+export default AppWrapper;
