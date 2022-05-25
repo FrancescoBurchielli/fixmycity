@@ -4,11 +4,13 @@ import PlacesAutocomplete from '../PlacesAutocomplete/PlacesAutocomplete';
 import { MapProps, Libraries, Selected, MarkerObject } from "./interfaces";
 import { useEffect } from 'react';
 import { getAllIssues } from '../../axios/fetches';
-import { getLatLng } from 'use-places-autocomplete';
+import { useNavigate } from 'react-router-dom';
 
 const libraries: Libraries = ['places'];
 
 const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
+
+    const navigate = useNavigate();
 
     const [map,setMap] = useState<google.maps.Map>();
     const [selected,setSelected] = useState<Selected>({latLng:null,address:''});  
@@ -20,17 +22,28 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
         libraries,
     })
 
+    const reportOnClickHandler = () => {
+        console.log("selected: ",selected);
+        setTimeout(()=>navigate("createissue/",{state:selected}),1000);
+    }
+
+
     if (!isLoaded) return <div>Loading...</div>
 
     return(
         <>
-            {map!==undefined?
+            {map &&
             <div className='absolute top-8 left-1/2 translate-x-[-50%] z-10 w-[90%] md:w-[50%] lg:w-[30%]'>
                 <PlacesAutocomplete setSelected={setSelected} map={map}/>
-            </div>     
-            : null
+            </div>    
             }          
+            {
+            selected.latLng &&
+            <button className='absolute bottom-10 left-1/2 translate-x-[-50%] z-10 w-[150px] h-[30px] md:w-[200px] md:h-[40px]  bg-white' onClick={reportOnClickHandler}>
+                Report
+            </button>  
 
+            }
             <Map selected={selected} setSelected={setSelected} mapCenter={mapCenter} setMapCenter={setMapCenter} map={map} setMap={setMap} />                
             
         </>
@@ -71,8 +84,6 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
       
     }
 
-    console.log(selected);
-
     return (            
 
         <GoogleMap 
@@ -84,14 +95,21 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
                 setMap(map);               
             }}
             onClick={async e=>{    
-                    if(e.latLng!==null){                        
+                    if(map && e.latLng!==null){                        
                         const address = await getAddressFromLatLng(e.latLng);
-                        setSelected({latLng:e.latLng,address:address});                      
+                        const currentZoom = map.getZoom();
+                        if(currentZoom!==undefined && currentZoom<16){
+                            map.setZoom(16);   
+                            map.setCenter(e.latLng);                             
+                        }else{
+                            setSelected({latLng:e.latLng,address:address});
+                        }                    
                     }            
             }}
             
         >               
-            {selected?.latLng && <Marker position={selected.latLng} onClick={()=>{setSelected({latLng:null,address:''})}}/>}           
+            {selected?.latLng && 
+            <Marker position={selected.latLng} onClick={()=>{setSelected({latLng:null,address:''})}}/>}           
             {markers && 
             
                 markers.map(marker => {
