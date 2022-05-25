@@ -1,5 +1,7 @@
 export type Libraries = ("drawing" | "geometry" | "localContext" | "places" | "visualization")[];
-export type Selected = {'latLng': google.maps.LatLng | google.maps.LatLngLiteral | null,
+export type Selected = {'lat': number | undefined,
+                        'lng': number | undefined,
+                        'googleLatLng':google.maps.LatLng | google.maps.LatLngLiteral | undefined,
                         'address':String
                         };
 

@@ -13,7 +13,7 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
     const navigate = useNavigate();
 
     const [map,setMap] = useState<google.maps.Map>();
-    const [selected,setSelected] = useState<Selected>({latLng:null,address:''});  
+    const [selected,setSelected] = useState<Selected>({lat:undefined,lng:undefined,address:'',googleLatLng:undefined});  
     const [mapCenter,setMapCenter] = useState<google.maps.LatLng | google.maps.LatLngLiteral | undefined>({lat:47.3769,lng:8.5417});      
     
 
@@ -23,8 +23,7 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
     })
 
     const reportOnClickHandler = () => {
-        console.log("selected: ",selected);
-        setTimeout(()=>navigate("createissue/",{state:selected}),1000);
+        navigate("/createissue",{state:{address:selected.address,lat:selected.lat,lng:selected.lng}});
     }
 
 
@@ -38,7 +37,7 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
             </div>    
             }          
             {
-            selected.latLng &&
+            selected.address &&
             <button className='absolute bottom-10 left-1/2 translate-x-[-50%] z-10 w-[150px] h-[30px] md:w-[200px] md:h-[40px]  bg-white' onClick={reportOnClickHandler}>
                 Report
             </button>  
@@ -67,8 +66,6 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
         disableDefaultUI:true,
     }
 
-
-
     const getAddressFromLatLng = async (latLng:google.maps.LatLng) => {
         const latLngInput = {'location':latLng};
         const response = await geocoder.geocode(latLngInput);
@@ -81,7 +78,6 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
             map.setZoom(18);
             setActiveMarker(marker);
         }
-      
     }
 
     return (            
@@ -102,14 +98,14 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
                             map.setZoom(16);   
                             map.setCenter(e.latLng);                             
                         }else{
-                            setSelected({latLng:e.latLng,address:address});
+                            setSelected({lat:e.latLng.lat(),lng:e.latLng.lng(),googleLatLng:e.latLng,address:address});
                         }                    
                     }            
             }}
             
         >               
-            {selected?.latLng && 
-            <Marker position={selected.latLng} onClick={()=>{setSelected({latLng:null,address:''})}}/>}           
+            {selected?.googleLatLng && 
+            <Marker position={selected.googleLatLng} onClick={()=>{setSelected({lat:undefined,lng:undefined,googleLatLng:undefined,address:''})}}/>}           
             {markers && 
             
                 markers.map(marker => {

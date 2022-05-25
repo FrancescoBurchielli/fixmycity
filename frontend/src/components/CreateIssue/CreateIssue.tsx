@@ -1,14 +1,13 @@
 import {FC} from 'react'
 import { useLocation } from 'react-router-dom'
+import { useNavigateStateObject } from './interfaces';
 
 const CreateIssue:FC<{}> = ({}) => {    
-    const location = useLocation();    
-
-    console.log(location);
+    const state:useNavigateStateObject = useLocation().state as useNavigateStateObject;    
 
     return (
         <>
-            <div>I'll be your create issue component</div>
+            <div>Creating issue at {state.address}</div>
         </>
     )
 }

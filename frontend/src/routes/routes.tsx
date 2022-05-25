@@ -5,7 +5,7 @@ const routes = [{
     path: "/", element: <Home />,
 },
 {    
-    path: "createissue/", element: <CreateIssue />,
+    path: "/createissue", element: <CreateIssue />,
 }
 ];
   
