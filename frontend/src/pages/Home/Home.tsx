@@ -1,5 +1,6 @@
 import {FC} from 'react'
 import MapWrapper from '../../components/Map/Map'
+import Navbar from '../../components/Navbar/Navbar';
 
 const Home:FC<{}>=({})=>{
 
@@ -7,7 +8,7 @@ const Home:FC<{}>=({})=>{
 
     return (
         <div className="h-full w-full flex flex-col ">
-            <h1>Header</h1>
+            <Navbar/>
             <MapWrapper apiKey={google_api_key}/>
             <h1>Footer</h1>
         </div>

@@ -4,7 +4,8 @@ import PlacesAutocomplete from '../PlacesAutocomplete/PlacesAutocomplete';
 import { MapProps, Libraries, Selected, MarkerObject } from "./interfaces";
 import { useEffect } from 'react';
 import { getAllIssues } from '../../axios/fetches';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar';
 
 const libraries: Libraries = ['places'];
 
@@ -30,9 +31,9 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
     if (!isLoaded) return <div>Loading...</div>
 
     return(
-        <>
+        <>            
             {map &&
-            <div className='absolute top-8 left-1/2 translate-x-[-50%] z-10 w-[90%] md:w-[50%] lg:w-[30%]'>
+            <div className='absolute top-[5%] left-1/2 translate-x-[-50%] z-10 w-[90%] md:w-[50%] lg:w-[30%]'>
                 <PlacesAutocomplete setSelected={setSelected} map={map}/>
             </div>    
             }          
@@ -131,11 +132,15 @@ const Map:FC<MapProps> = ({selected,setSelected,map,setMap,mapCenter,setMapCente
                         setActiveMarker(undefined);
                     }}
                 >
-                <div className='w-24 md:w-36 lg:w-52'>
+                <div className='Blabla w-24 md:w-36 lg:w-52 flex flex-col'>
                     <p className='text-base md:text-lg lg:text-xl font-bold '>{activeMarker.title}</p>
                     <p>{activeMarker.created}</p>
                     <p>{activeMarker.status}</p>
                     <p>{activeMarker.upvotes}</p>
+                    <div className='flex flex-row justify-end'>
+                        <Link to={`issuedetails/${activeMarker.id}`} className=''>More details</Link>
+                    </div>
+                   
                 </div>
                 </InfoWindow>
             

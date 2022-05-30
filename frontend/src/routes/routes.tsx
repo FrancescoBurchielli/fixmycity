@@ -1,4 +1,5 @@
 import CreateIssue from "../components/CreateIssue/CreateIssue";
+import IssueDetails from "../components/IssueDetails/IssueDetails";
 import Home from "../pages/Home/Home";
 
 const routes = [{    
@@ -6,6 +7,9 @@ const routes = [{
 },
 {    
     path: "/createissue", element: <CreateIssue />,
+},
+{    
+    path: "/issuedetails/:id", element: <IssueDetails />,
 }
 ];
   
