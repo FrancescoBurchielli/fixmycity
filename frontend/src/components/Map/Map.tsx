@@ -33,7 +33,7 @@ const MapWrapper:FC<{apiKey:string}> = ({apiKey}) => {
     return(
         <>            
             {map &&
-            <div className='absolute top-[5%] left-1/2 translate-x-[-50%] z-10 w-[90%] md:w-[50%] lg:w-[30%]'>
+            <div className='absolute top-[35px] left-1/2 translate-x-[-50%] z-10 w-[90%] md:w-[50%] lg:w-[30%]'>
                 <PlacesAutocomplete setSelected={setSelected} map={map}/>
             </div>    
             }          
