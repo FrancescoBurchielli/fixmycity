@@ -11,19 +11,19 @@ const Navbar:FC<{}> = ({}) => {
 
     return (
         <>
-            <div className='absolute z-10 w-full h-[30px] flex flex-row justify-end items-center pr-3 pt-1'>
+            <div className='absolute z-[12] w-full h-[30px] flex flex-row justify-end items-center pr-3 pt-1'>
                 {showMenu?                          
                     <AiOutlineClose size={30} onClick={menuClickHandler} className='cursor-pointer'/> 
                 :
                     <AiOutlineMenu size={30} onClick={menuClickHandler} className='cursor-pointer'/>
                 }            
             </div>            
-            <div className={showMenu? 'flex flex-col fixed z-10 left-0 top-0 w-[25%] h-full bg-white bg-opacity-75 ease-in-out duration-500' : 'fixed top-0 left-[-100%] ease-in-out duration-500 '} >
+            <div className={showMenu? 'flex flex-col fixed z-[11] left-0 top-0 w-full h-full bg-white bg-opacity-[.87] ease-in-out duration-700 md:w-[25%]' : 'fixed z-[11] top-[-100%] w-full h-full ease-in-out duration-700 md:top-0 md:left-[-100%] md:w-[25%]'} >
                 <ul className='flex flex-col grow p-4 pt-10 uppercase'>
-                    <li className='p-4 border-b border-gray-600'>Home</li>
-                    <li className='p-4 border-b border-gray-600'>Profile</li>
-                    <li className='p-4 border-b border-gray-600'>Issues</li>
-                    <li className='p-4 border-b border-gray-600'>About</li>
+                    <li className='p-4 border-b border-gray-600 text-center md:text-left'>Home</li>
+                    <li className='p-4 border-b border-gray-600 text-center md:text-left'>Profile</li>
+                    <li className='p-4 border-b border-gray-600 text-center md:text-left'>Issues</li>
+                    <li className='p-4 border-b border-gray-600 text-center md:text-left'>About</li>
                 </ul>
             </div>
           
